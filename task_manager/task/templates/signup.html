@@ -1,0 +1,50 @@
+{% load static %}
+<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp  | Task Manager</title> 
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <div class="wrapper">
+        <div class="title"><span>SignUp Form</span></div>
+        <form method="POST" action="">
+          {% csrf_token %}
+          <div class="row">
+            <i class="fas fa-user"></i>
+            {{form.name}}
+          </div>
+          <div class="row">
+            <i class="fas fa-envelope-square"></i>
+            {{form.email}}
+          </div>
+          <div class="row">
+            <i class="fas fa-lock"></i>
+            {{form.password1}}
+          </div>
+          <div class="row">
+            <i class="fas fa-lock"></i>
+            {{form.password2}}
+          </div>
+          <div class="row button">
+            <input type="submit" value="SignUp">
+          </div>
+          <div class="signup-link">Not a member? <a href="#">Signup now</a></div>
+          <div style="color:red;">
+          {{form.errors}}
+          </div>
+        </form>
+       
+      </div>
+     
+    </div>
+
+  </body>
+</html>
+
+<html>
