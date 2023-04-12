@@ -1,0 +1,59 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block hello %}
+<div class="container-fluid-home">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    ToDo | {{name}} 
+                </div>
+                <div class="card-body">
+                    <div class="sub-card">
+                            <div class="card-body">
+                            <h5 class="card-title">Card 1 Title</h5>
+                            <p class="card-text">{{request.user.name}}</p>
+                            <a href="#" class="btn">Progress</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    in Progress | {{name}}
+                </div>
+                <div class="card-body">
+                    <div class="sub-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 1 Title</h5>
+                            <p class="card-text">This is a sample card with some text content.</p>
+                            <a href="#" class="btn">Done</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Done | {{name}}
+                </div>
+                <div class="card-body">
+                    <div class="sub-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Card 1 Title</h5>
+                            <p class="card-text">This is a sample card with some text content.</p>
+                            <a href="#" class="btn">Submit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+  

@@ -12,7 +12,7 @@ class Task(models.Model):
         return str(self.task)
 
 class Project(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     detail = models.CharField(max_length=1024, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -26,7 +26,7 @@ class Project_Has_Reporter(models.Model):
     Project_Name = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.Project_Reporter)
+        return str(f"{self.Project_Reporter}/{self.Project_Name}")
     
     class Meta:
         unique_together = (('Project_Reporter', 'Project_Name'),)

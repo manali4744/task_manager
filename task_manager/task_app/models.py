@@ -74,14 +74,12 @@ class User(AbstractBaseUser):
     
 class Reporter(models.Model):
     admin = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_admin = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.admin)
 
 class Reportee(models.Model):
     Reportee = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_reportee = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.Reportee)

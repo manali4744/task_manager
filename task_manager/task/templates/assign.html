@@ -1,0 +1,10 @@
+<form method="post" enctype="">
+    {% csrf_token %}
+    {% for i in form %}
+    
+    {{i.label}}    
+    {{i.choicefield}}
+    {% endfor %}
+    <input type="submit" value="Submit">
+    </div>
+</form>

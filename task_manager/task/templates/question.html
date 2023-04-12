@@ -1,0 +1,35 @@
+{% load static %}
+<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question  | Task Manager</title> 
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <div class="wrapper">
+        <div class="title"><span>What is your Role?</span></div>
+        <form method="POST" action="">
+          {% csrf_token %}
+            <div class = "d-flex ">
+                <input type="radio" name="flag" value="Reporter">Reporter
+                <input type="radio" name="flag" value="Reportee" >Reportee
+            </div>
+          <div> 
+          {% for message in messages %}
+            <p id = 'messages'>{{message}}</p>
+          {% endfor %}</div>
+          <div class="row button">
+            <input type="submit" value="Submit">
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
+<html>
