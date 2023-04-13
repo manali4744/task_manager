@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SignInView, SignUpView, QuestionView, HomeView, CreateProjectView, CreateTaskView, AssignTaskView
+from .views import SignInView, SignUpView, QuestionView, HomeView, CreateProjectView, CreateTaskView, AssignTaskView, ProgressView, DoneView
 
 urlpatterns = [
     path('',SignInView, name='signin'), 
@@ -8,7 +8,9 @@ urlpatterns = [
     path('question/',QuestionView, name='question'),
 
     path('home/', HomeView, name='home'),
-    path('createproject/', CreateProjectView, name='createproject'),  
-    path('createtask/', CreateTaskView, name='createtask'),  
-    path('assigntask/', AssignTaskView, name='assigntask'),  
+    path('createproject/', CreateProjectView, name='createproject'),   
+    path('createtask/<str:pk>', CreateTaskView, name='createtask'),  
+    path('assigntask/<str:pk>/<str:tk>', AssignTaskView, name='assigntask'),
+    path('progress/<str:pk>', ProgressView, name='progress'),  
+    path('done/<str:pk>', DoneView, name='done')  
 ]

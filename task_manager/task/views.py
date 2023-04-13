@@ -3,7 +3,7 @@ from .forms import CreateUserforms, ProjectForm, TaskForm, AssignForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from task_app.models import Reporter, Reportee
+from task_app.models import Reporter, Reportee, User
 from .models import *
 
 # Create your views here.
@@ -66,12 +66,21 @@ def QuestionView(request):
 
 @login_required(login_url='/signin/')
 def HomeView(request):
-    context = {
-        'name': request.user
-    }
+    if request.user.is_admin == True:
+        reporter = Reporter.objects.get(admin=request.user)
+        project = Project_Has_Reporter.objects.get(Project_Reporter=reporter)
+        context = {
+        'project': project.Project_Name.all()
+        }
+    else:
+        reportee = Reportee.objects.get(Reportee=request.user)
+        my_task = Task_Has_Reportee.objects.filter(Reportee=reportee)
+        context = {
+            'my_task' : my_task
+        }
     return render(request, 'home.html', context)
-
-
+        
+   
 @login_required(login_url='/signin/')
 def CreateProjectView(request):
     reporter = Reporter.objects.get(admin=request.user)
@@ -80,9 +89,22 @@ def CreateProjectView(request):
         form = ProjectForm(request.POST)
         if form.is_valid():
             form.save()
-            title = form.cleaned_data.get('title')
-            project = Project.objects.get(title=title)
-            Project_Has_Reporter.objects.create(Project_Reporter=reporter, Project_Name = Project.objects.get(title=project))
+            print("here")
+            reporter = Reporter.objects.get(admin=request.user)
+            project = form.cleaned_data.get('title')
+            title = Project.objects.get(title=project)
+            project_has_task = Project_Has_Task.objects.create(project=title)
+            print("hello")
+            try:
+                project_has_reporter = Project_Has_Reporter.objects.get(Project_Reporter=reporter)
+                project_has_reporter.Project_Name.add(project_has_task)
+                project_has_reporter.save()
+            except Project_Has_Reporter.DoesNotExist as e:
+                project_has_reporter = Project_Has_Reporter()
+                project_has_reporter.Project_Reporter =  Reporter.objects.get(admin=request.user)
+                project_has_reporter.save()
+                project_has_reporter.Project_Name.add(project_has_task)
+                project_has_reporter.save()           
             return redirect('home')
     context={
         'form': form
@@ -90,12 +112,16 @@ def CreateProjectView(request):
     return render(request, 'create_project.html', context)
 
 @login_required(login_url='/signin/')
-def CreateTaskView(request):
+def CreateTaskView(request, pk):
     form = TaskForm()
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
+            project_has_task=Project_Has_Task.objects.get(id=pk)
+            task = form.cleaned_data.get('task')
+            new_task = Task.objects.get(task=task)
+            project_has_task.task.add(new_task)
             return redirect('home')
     context = {
         'form' : form
@@ -103,11 +129,38 @@ def CreateTaskView(request):
     return render(request, 'create_task.html', context)
 
 @login_required(login_url='/signin/')
-def AssignTaskView(request):
+def AssignTaskView(request,pk, tk):
+    # print(f"product id/{pk}/ task id {tk}")
     form = AssignForm()
+    if request.method == 'POST':
+        form = AssignForm(request.POST)
+        if form.is_valid():
+            reportee = form.cleaned_data.get('Reportee')
+            user = User.objects.get(email=reportee)
+            reporter = Reporter.objects.get(admin=request.user)
+            reportee = Reportee.objects.get(Reportee=user)
+            project = Project.objects.get(id=pk)
+            task = Task.objects.get(id=tk)
+            Task_Has_Reportee.objects.create(Project=project,Reporter=reporter, Reportee=reportee,task=task)
+            return redirect('home')
     context = {
         'form' : form
     }
     return render(request, 'assign.html', context)
+
+
+@login_required(login_url='/signin/')
+def ProgressView(request, pk):
+    data = Task_Has_Reportee.objects.get(id=pk)
+    data.status = "In Progress"
+    data.save()
+    return redirect('home')
+
+@login_required(login_url='/signin/')
+def DoneView(request, pk):
+    data = Task_Has_Reportee.objects.get(id=pk)
+    data.status = "Done"
+    data.save()
+    return redirect('home')
 
     

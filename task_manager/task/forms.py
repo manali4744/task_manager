@@ -27,12 +27,11 @@ class TaskForm(forms.ModelForm):
         fields = ("task","task_description")
 
 class AssignForm(forms.ModelForm):
-    Project_info = forms.ChoiceField()
-    Reportee = forms.ChoiceField()
-    task = forms.ChoiceField()
-    status = forms.ChoiceField()  
     class Meta:
         model = Task_Has_Reportee
-        fields = ('Project_info', 'Reportee', 'task', 'status',)
+        fields = ("Reportee",)
+
+
+
 
 
