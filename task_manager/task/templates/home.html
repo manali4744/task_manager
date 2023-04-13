@@ -1,0 +1,99 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block hello %}
+<div class="container-fluid-home">
+    <div class="row">
+        {% if request.user.is_admin == False%}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    ToDo| {{request.user.name}} 
+                </div>
+                <div class="card-body">
+                    {% for i in my_task %}
+                    {% if i.status == 'ToDo' %}
+                    <div class="sub-card">
+                            <div class="card-body">
+                            <h5 class="card-title">Task|{{i.task}}</h5>
+                            <p class="card-text">Project:{{i.Project.title}}</p>
+                            <p class="card-text">Task description:{{i.task.task_description}}</p>
+                            <a href="{% url 'progress' i.id %}" class="btn">Progress</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    in Progress | {{request.user.name}}
+                </div>
+                <div class="card-body">
+                    {% for i in my_task %}
+                    {% if i.status == 'In Progress' %}
+                    <div class="sub-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Task|{{i.task}}</h5>
+                            <p class="card-text">Project:{{i.Project.title}}</p>
+                            <p class="card-text">Task description:{{i.task.task_description}}</p>
+                            <a href="{% url 'done' i.id %}" class="btn">Done</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Done | {{request.user.name}}
+                </div>
+                <div class="card-body">
+                    {% for i in my_task %}
+                    {% if i.status == 'Done' %}
+                    <div class="sub-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Task|{{i.task}}</h5>
+                            <p class="card-text">Project:{{i.Project.title}}</p>
+                            <p class="card-text">Task description:{{i.task.task_description}}</p>
+                            <a href="#" class="btn">Submit</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if request.user.is_admin == True%}
+        {% for i in project %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Project | {{i.project.title}} 
+                </div>
+                <div class="card-body">
+                    {% for j in i.task.all %}
+                    <div class="sub-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Task|{{j.task}}</h5>
+                            <p class="card-text">{{j.task_description}}</p>
+                            <a href="{% url 'assigntask' i.id j.id%}" class="btn">Assign-Task</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <a href="{% url 'createtask' i.id %}" class="btn">Create-Task</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+  

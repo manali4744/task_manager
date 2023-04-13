@@ -1,0 +1,42 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block hello %}
+<link rel="stylesheet" href="{% static 'create-project.css' %}">
+<body>
+<main class="project">
+    <section class="project">
+        <h2>Assign Task</h2>
+        <form method="post" enctype="">
+            {% csrf_token %}
+            <label for="Project_info">Project_info</label>
+            {{form.Project_info}}
+            <label for="Reportee">Reportee:</label>
+            {{form.Reportee}}
+            <label for="task">Task:</label>
+            {{form.task}}
+            <label for="status">Status:</label>
+            {{form.status}}
+            <div class="container justify-content-center">
+            <input type="submit" value="Submit">
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+{% endblock hello %}
+    
+
+
+
+
+
+form method="post" enctype="">
+    {% csrf_token %}
+    {{form.Project_info}}
+    {{form.Reportee}}
+    {{form.task}}
+    {{form.status}}
+    <input type="submit" value="Submit">
+    </div>
+</form>
