@@ -1,4 +1,5 @@
 {% extends 'navbar.html' %}
+{% load mathfilters %}
 {% load static %}
 
 {% block hello %}
@@ -11,13 +12,29 @@
                     ToDo| {{request.user.name}} 
                 </div>
                 <div class="card-body">
+                    <div class="d-flex justify-content-end">
+                        <div class="dropdown show justify-content-end">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Priority|{{priority_status}}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="{% url 'priority' 'High' %}">High</a>
+                                <a class="dropdown-item" href="{% url 'priority' 'Medium' %}">Medium</a>
+                                <a class="dropdown-item" href="{% url 'priority' 'Low' %}">Low</a>
+                                <a class="dropdown-item" href="{% url 'home' %}">Default</a>
+                            </div>
+                        </div>
+                    </div>
                     {% for i in my_task %}
                     {% if i.status == 'ToDo' %}
                     <div class="sub-card">
                             <div class="card-body">
                             <h5 class="card-title">Task|{{i.task}}</h5>
+                            <h4 class="sub-title">Days|{{i.days}}</h4>
                             <p class="card-text">Project:{{i.Project.title}}</p>
                             <p class="card-text">Task description:{{i.task.task_description}}</p>
+                            <p class="card-text">Task Priority:{{i.Priority}}</p>
+                            <p class="card-text">Task Assign_at:{{i.created_at}}</p>
                             <a href="{% url 'progress' i.id %}" class="btn">Progress</a>
                         </div>
                     </div>
@@ -36,10 +53,14 @@
                     {% if i.status == 'In Progress' %}
                     <div class="sub-card">
                         <div class="card-body">
+                            <h4 class="sub-title">Due date:{{i.expected_at}}</h4>
+                            <p class="card-text">Task Assign_at:{{i.created_at}}</p>
                             <h5 class="card-title">Task|{{i.task}}</h5>
                             <p class="card-text">Project:{{i.Project.title}}</p>
                             <p class="card-text">Task description:{{i.task.task_description}}</p>
-                            <a href="{% url 'done' i.id %}" class="btn">Done</a>
+                            <h4 class="sub-title">Days|{{i.days}}</h4>
+                            <h4 class="sub-title">Today:{% now "DATETIME_FORMAT" %}</h4>
+                            <a href="{% url 'done' i.id %}" class="btn">Submit</a>
                         </div>
                     </div>
                     {% endif %}
@@ -60,7 +81,7 @@
                             <h5 class="card-title">Task|{{i.task}}</h5>
                             <p class="card-text">Project:{{i.Project.title}}</p>
                             <p class="card-text">Task description:{{i.task.task_description}}</p>
-                            <a href="#" class="btn">Submit</a>
+                            <a href="#" class="btn">Take-Action</a>
                         </div>
                     </div>
                     {% endif %}

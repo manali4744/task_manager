@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'task_app', 
     'task',
+    'mathfilters', 
 ]
 
 MIDDLEWARE = [

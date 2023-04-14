@@ -6,7 +6,7 @@ class Task(models.Model):
     task = models.CharField(max_length=255, unique=True)
     task_description = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
-    submitted_at = models.DateTimeField(auto_now=True)
+    submitted_at = models.DateTimeField(null=True)
     
     def __str__(self):
         return str(self.task)
@@ -40,15 +40,28 @@ class Task_Has_Reportee(models.Model):
         ('ToDo', 'ToDo'),
         ('In Progress', 'In Progress'), 
         ('Done', 'Done'), 
-     )
+    )
+    Priority = (
+        ('High', 'High'),
+        ('Medium', 'Medium'), 
+        ('Low', 'Low'), 
+    )
     Project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     Reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE, null=True)
     Reportee = models.ForeignKey(Reportee, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     status = models.CharField(max_length=250,  choices=STATUS, default='ToDo')         
+    Priority = models.CharField(max_length=250,  choices=Priority, default='Medium')
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    expected_at = models.DateTimeField(null=True)
+    submitted_at = models.DateTimeField(null=True)
+    days = models.IntegerField(null=True)         
 
     def __str__(self):
         return str(f"{self.Project.title}/{self.task.task}/{self.Reportee.Reportee.email}_")
+    
+    class Meta:
+        ordering =['Priority']
 0
 
 
