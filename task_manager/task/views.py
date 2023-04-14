@@ -5,8 +5,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from task_app.models import Reporter, Reportee, User
 from .models import *
+from datetime import datetime as dt
+import datetime
 
 # Create your views here.
+def expectedday(days):
+    weekend = 0
+    for i in range(0, days):
+        date = dt.now() + datetime.timedelta(days=i)
+        if date.weekday() == 5 or date.weekday() == 6:
+            weekend+=1
+    days=days+weekend
+    date = dt.now() + datetime.timedelta(days=days)
+    return date
+
+
 def SignInView(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -130,18 +143,20 @@ def CreateTaskView(request, pk):
 
 @login_required(login_url='/signin/')
 def AssignTaskView(request,pk, tk):
-    # print(f"product id/{pk}/ task id {tk}")
     form = AssignForm()
     if request.method == 'POST':
         form = AssignForm(request.POST)
         if form.is_valid():
             reportee = form.cleaned_data.get('Reportee')
+            priority = form.cleaned_data.get('Priority')
+            days = form.cleaned_data.get('days')
             user = User.objects.get(email=reportee)
             reporter = Reporter.objects.get(admin=request.user)
             reportee = Reportee.objects.get(Reportee=user)
             project = Project.objects.get(id=pk)
             task = Task.objects.get(id=tk)
-            Task_Has_Reportee.objects.create(Project=project,Reporter=reporter, Reportee=reportee,task=task)
+            expected_at = expectedday(days)
+            Task_Has_Reportee.objects.create(Project=project,Reporter=reporter, Reportee=reportee,task=task,Priority=priority, days=days, expected_at=expected_at)
             return redirect('home')
     context = {
         'form' : form
@@ -159,8 +174,25 @@ def ProgressView(request, pk):
 @login_required(login_url='/signin/')
 def DoneView(request, pk):
     data = Task_Has_Reportee.objects.get(id=pk)
+    print(data.task.id)
+    task = Task.objects.get(id=data.task.id)
+    task.submitted_at = dt.now()
+    task.save()
     data.status = "Done"
+    data.submitted_at = dt.now()
     data.save()
     return redirect('home')
+
+
+@login_required(login_url='/signin/')
+def PriorityView(request, pk):
+    reportee = Reportee.objects.get(Reportee=request.user)
+    my_task = Task_Has_Reportee.objects.filter(Reportee=reportee, Priority=pk)
+    context = {
+        'my_task' : my_task,
+        'priority_status': pk
+    }
+    return render(request, 'home.html', context)
+
 
     

@@ -29,7 +29,7 @@ class TaskForm(forms.ModelForm):
 class AssignForm(forms.ModelForm):
     class Meta:
         model = Task_Has_Reportee
-        fields = ("Reportee",)
+        fields = ("Reportee","Priority",'days',)
 
 
 
